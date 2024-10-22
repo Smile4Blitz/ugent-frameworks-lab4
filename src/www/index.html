@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/index.css">
+    <title>Message App</title>
+</head>
+
+<body>
+    <div
+        style="position: fixed; top: -2vh; left: -2vw; width: 105vw; height: 105vh; background-image: url('./img/background.jpg'); background-size: cover; background-position: center; filter: blur(5px); z-index: -1;">
+    </div>
+    <div style="height: 95vh; margin: 0; display: flex; justify-content: center; align-items: center">
+        <div class="message-root">
+            <div class="message-users">
+                <div id="message-users-bounds" class="message-users-bounds">
+                    <div class="user-card">
+                        <div class="user-image">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXJA32WU4rBpx7maglqeEtt3ot1tPIRWptxA&s"
+                                alt="image">
+                        </div>
+                        <div class="user-name">
+                            <span>User</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="message-chats">
+                <div id="message-chats-bounds" class="message-chats-bounds">
+                    <div class="message-card">
+                        <div class="sender-bubble">
+                            <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                            dummy text ever since the 1500s, when an unknown printer</span>
+                        </div>
+                    </div>
+                    <div class="message-card">
+                        <div class="receiver-bubble">
+                            <span>Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content
+                            here', making it look like readable English</span>
+                        </div>
+                    </div>
+                    <div class="message-card">
+                        <div class="receiver-bubble">
+                            <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                            dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+                            book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+                            unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+                            recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="message-send-bounds" class="message-send-bounds">
+                    <div class="chats-send">
+                        <textarea name="" id=""></textarea>
+                    </div>
+                    <div class="send-button">
+                        <img src="./img/send-button.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dev-user-picker">
+        <select name="user-profile-select" id="user-profile-select" onchange="populateChats(this)">
+            <option value="abc">abc</option>
+        </select>
+    </div>
+</body>
+
+<script src="./js/index.js"></script>
+
+</html>

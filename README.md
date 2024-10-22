@@ -1,39 +1,6 @@
 ## Socials App
 This is a messaging app, just like Whatsapp or Messenger you can send messages to users and groups.
 
-### App Requirements
-
-#### User
-- **Find a user**: Search for users by name, email, or username.
-- **Start a chat with a user**: Initiate a one-on-one conversation.
-- **Mute a chat with a user**: Disable notifications for a specific chat.
-- **Block a user**: Block a user.
-- **Update user profile**: Change name or username.
-
-#### Group
-- **Start a group with 1 or more users**: Create a chat group.
-- **Leave a group**: Exit a group chat.
-- **Block a group**: Prevent messages from a group.
-- **Add users to a group**: Add users to the group.
-- **Change group name**: Update the group’s title.
-- **List group members**: See who is in the group.
-  
-#### Message
-- **Send a message to a specific user**: Direct message.
-- **Send a message to a group**: Broadcast message to group members.
-- **Receive a message from a specific user**: Handle direct messages.
-- **Receive a message from a group**: Handle group messages.
-- **Message can contain non-string objects (images, video)**: Support multimedia content (urls & types on client-side?)
-
-#### Chat
-- **Add users**: Include additional participants in a chat.
-- **List messages in chronological order (timestamp)**: View messages in the order they were sent.
-- **Pin important messages**: Keep essential messages at the top of the chat (filters?)
-
-#### Additional Features
-- **Read receipts**: Indicate when a message has been read.
-- **Chat history**: Save past conversations for later access.
-
 ### API Design
 API design based on the above summarized feature requirements.
 
@@ -82,6 +49,7 @@ API design based on the above summarized feature requirements.
 
 #### Additional Features
 
+// alternatively: use get requests & their timestamps to indicate when the user was last reading the chat
 4. **Read Receipts**
    - **POST** `/messages/{messageId}/read`
    - **Response:** Confirmation of read receipt.

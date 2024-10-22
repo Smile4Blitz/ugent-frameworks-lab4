@@ -20,6 +20,14 @@ export class ChatRepository {
         });
     }
 
+    public async findAllUserIdChats(user: User): Promise<Chat[]> {
+        return await this.repository
+            .createQueryBuilder("chat")
+            .innerJoin("chat.participants", "participant")
+            .where("participant.userId = :userId", { userId: user.userId })
+            .getMany();
+    }
+
     public async createChat(name: string, participants: User[]): Promise<Chat> {
         const chat = this.repository.create({
             name: "Chat",

@@ -1,4 +1,5 @@
 import { Request, Response, Application } from 'express';
+import path from 'path';
 
 export class IndexController {
     private app: Application;
@@ -10,7 +11,7 @@ export class IndexController {
 
     private setupRoutes(): void {
         this.app.get('/', (req: Request, res: Response) => {
-            res.send('Hello World!');
+            res.sendFile(path.join(__dirname, '../www', 'index.html')); 
         });
     }
 }

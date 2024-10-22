@@ -1,4 +1,4 @@
-import { DataSource, DeleteResult, In, Repository, UpdateResult } from "typeorm";
+import { DataSource, In, Repository } from "typeorm";
 import { User } from "../entity/User";
 import { AppDataSource } from "../data/DataSource";
 

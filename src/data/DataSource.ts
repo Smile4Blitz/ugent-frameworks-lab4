@@ -17,7 +17,7 @@ export class AppDataSource {
                 password: process.env.POSTGRES_PASSWORD,
                 database: process.env.POSTGRES_DB,
                 entities: [User, Chat, Message],
-                synchronize: false, // creates or updates tables, set to false if db already contains those tables
+                synchronize: false, // creates or updates tables, set to false if db already contains those tables, throws errors otherwise
             });
         }
 

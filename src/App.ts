@@ -4,6 +4,7 @@ import { UserController } from './controller/UserController';
 import { config } from 'dotenv';
 import { AppDataSource } from './data/DataSource';
 import { ChatController } from './controller/ChatController';
+import path from 'path';
 
 class App {
     private app: Application;
@@ -20,6 +21,8 @@ class App {
         new IndexController(this.app);
         new UserController(this.app);
         new ChatController(this.app);
+
+        this.app.use(express.static(path.join(__dirname, 'www'))); // for static files
     }
 
     public startListener(): void {
