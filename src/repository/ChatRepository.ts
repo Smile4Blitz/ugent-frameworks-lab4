@@ -13,36 +13,24 @@ export class ChatRepository {
         this.repository = this.dataSource.getRepository(Chat);
     }
 
-    public async findById(id: number): Promise<Chat | null> {
+    public async findById(chatId: number): Promise<Chat | null> {
         return this.repository.findOne({
-            where: { id },
+            where: { chatId },
             relations: ["participants", "messages"],
         });
     }
 
-    public async createChat(type: string, participants: User[]): Promise<Chat> {
+    public async createChat(name: string, participants: User[]): Promise<Chat> {
         const chat = this.repository.create({
-            type,
+            name: "Chat",
             participants,
         });
         return this.repository.save(chat);
     }
 
-    public async addMessage(chatId: number, message: Message): Promise<Chat | undefined> {
-        const chat = await this.findById(chatId);
-        if (chat) {
-            chat.messages.push(message);
-            return this.repository.save(chat);
-        }
-        return undefined;
-    }
-
-    public async findByUser(userId: number): Promise<Chat[]> {
-        return this.repository
-            .createQueryBuilder("chat")
-            .leftJoinAndSelect("chat.participants", "user")
-            .where("user.id = :userId", { userId })
-            .getMany();
+    public async addMessage(chat: Chat, message: Message): Promise<Chat | undefined> {
+        chat.messages.push(message);
+        return this.repository.save(chat);
     }
 
     public async deleteChat(id: number): Promise<void> {

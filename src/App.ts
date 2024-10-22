@@ -3,6 +3,7 @@ import { IndexController } from './controller/IndexController';
 import { UserController } from './controller/UserController';
 import { config } from 'dotenv';
 import { AppDataSource } from './data/DataSource';
+import { ChatController } from './controller/ChatController';
 
 class App {
     private app: Application;
@@ -18,6 +19,7 @@ class App {
 
         new IndexController(this.app);
         new UserController(this.app);
+        new ChatController(this.app);
     }
 
     public startListener(): void {

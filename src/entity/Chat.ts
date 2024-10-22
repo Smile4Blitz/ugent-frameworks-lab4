@@ -1,12 +1,12 @@
 import 'reflect-metadata';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany, JoinTable, ManyToOne } from "typeorm";
 import { Message } from './Message';
 import { User } from "./User";
 
 @Entity()
 export class Chat {
     @PrimaryGeneratedColumn()
-    id!: number;
+    chatId!: number;
 
     @Column()
     name!: string;
@@ -15,6 +15,6 @@ export class Chat {
     @JoinTable()
     participants!: User[];
 
-    @OneToMany(() => Message, message => message.chatId)
+    @OneToMany(() => Message, message => message.chat)
     messages!: Message[];
 }

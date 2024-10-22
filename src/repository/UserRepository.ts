@@ -1,4 +1,4 @@
-import { DataSource, In, Repository } from "typeorm";
+import { DataSource, DeleteResult, In, Repository, UpdateResult } from "typeorm";
 import { User } from "../entity/User";
 import { AppDataSource } from "../data/DataSource";
 
@@ -32,9 +32,9 @@ export class UserRepository {
         }
     }
 
-    public async findById(id: number): Promise<User[] | undefined> {
-        const user = await this.repository.findOne({ where: { id } });
-        return user ? [user] : undefined;
+    public async findById(userId: number): Promise<User | undefined> {
+        const user = await this.repository.findOne({ where: { userId } });
+        return user ? user : undefined;
     }
 
     public async createUser(name: string): Promise<User> {
@@ -42,7 +42,17 @@ export class UserRepository {
         return this.repository.save(user);
     }
 
-    public async deleteUser(id: number): Promise<void> {
-        await this.repository.delete(id);
+    public async deleteUser(id: number): Promise<Boolean> {
+        const result = await this.repository.delete(id);
+        return typeof result.affected == 'number' && result.affected > 0 ? true : false;
+    }
+
+    // case sensitive, need to implement lowercase only solution here also (see post createUser for reference)
+    public async updateUser(user: User): Promise<Boolean> {
+        const result = await this.repository.update({
+            userId: user.userId
+        }, user);
+
+        return typeof result.affected == 'number' && result.affected > 0 ? true : false;
     }
 }

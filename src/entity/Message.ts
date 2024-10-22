@@ -1,19 +1,18 @@
 import 'reflect-metadata';
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany } from "typeorm";
+import { Chat } from './Chat';
+import { User } from './User';
 
 @Entity()
 export class Message {
     @PrimaryGeneratedColumn()
-    id!: number;
+    messageId!: number;
 
-    @Column()
-    chatId!: number;
+    @ManyToOne(() => Chat, chat => chat.messages, { onDelete: 'CASCADE' })
+    chat!: Chat;
 
-    @Column()
-    sender!: string;
-
-    @Column()
-    receiver!: string;
+    @ManyToOne(() => User, user => user.userId, { onDelete: 'NO ACTION' })
+    sender!: User;
 
     @Column()
     timestamp!: Date;
@@ -21,3 +20,4 @@ export class Message {
     @Column()
     content!: string;
 }
+

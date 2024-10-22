@@ -5,6 +5,7 @@ import { Message } from "../entity/Message";
 
 export class AppDataSource {
     private static dataSource: DataSource;
+    private static isInitialized : Boolean = false;
 
     public static initialize(): void {
         if (!this.dataSource) {
@@ -23,9 +24,11 @@ export class AppDataSource {
         if (!this.dataSource.isInitialized) {
             this.dataSource.initialize()
                 .then(() => {
+                    this.isInitialized = true;
                     console.log("Database initialized successfully.");
                 })
                 .catch((error) => {
+                    this.isInitialized = false;
                     console.error("Couldn't initialize database: " + error);
                     throw error;
                 });
@@ -33,7 +36,7 @@ export class AppDataSource {
     }
 
     public static getInstance(): DataSource {
-        if (!this.dataSource.isInitialized) {
+        if (!this.isInitialized) {
             this.initialize();
         }
         return this.dataSource;
