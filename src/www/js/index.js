@@ -80,18 +80,19 @@ async function populateChatMessages(id) {
     chatMessageBlock.innerHTML = '';
 
     const messages = await fetchChatMessages(id);
+    chatMessageBlock.setAttribute('chatid', id);
 
     messages.forEach(message => {
         const messageCard = document.createElement('div');
         messageCard.className = 'message-card';
-        
+
         const messageType = document.createElement('div');
-        if (message.UserId == activeProfile.id)
+        if (message.sender.userId == activeProfile.value)
             messageType.className = 'sender-bubble';
         else
             messageType.className = 'receiver-bubble'
         messageCard.appendChild(messageType);
-        
+
         const messageContent = document.createElement('span');
         messageContent.innerText = message.content;
         messageType.appendChild(messageContent);
@@ -117,6 +118,38 @@ async function createDevModeProfilePicker(users) {
     });
 
     populateChats(dev_profile_picker);
+}
+
+async function sendMessage() {
+    const chatid = document.getElementById('message-chats-bounds').getAttribute('chatid');
+    const activeProfile = Number(document.getElementById('user-profile-select').value).valueOf();
+    const content = document.getElementById('chats-send-content');
+    
+    if (chatid == null || isNaN(activeProfile) || content == '')
+        return;
+
+    try {
+        const response = await fetch(apiUrl + '/chat/' + chatid + '/messages/create', {
+            method: "POST",
+            body: JSON.stringify({
+                sender: activeProfile,
+                content: content.value
+            }),
+            headers : {
+                "Content-Type": "application/json"
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        return;
+    }
+
+    content.value = '';
+
+    populateChatMessages(chatid);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {

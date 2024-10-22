@@ -31,4 +31,12 @@ export class MessageRepository {
         });
         return this.repository.save(message);
     }
+
+    public async getChatMessages(chat: Chat): Promise<Message[]> {
+        return await this.repository
+            .createQueryBuilder("message")
+            .leftJoinAndSelect("message.sender", "sender")
+            .where({ chat })
+            .getMany();
+    }
 }

@@ -1,5 +1,8 @@
 .message-root {
     display: flex;
+    min-width: fit-content;
+    min-height: fit-content;
+    
     width: 75vw;
     height: 80vh;
     overflow: hidden;
@@ -12,12 +15,18 @@
     justify-content: center;
     align-items: center;
 
+    min-width: 360px;
+    min-height: 500px;
+
     width: 25%;
     height: 100%;
     background-color: rgb(174, 236, 239, 0.75);
 }
 
 .message-chats {
+    min-width: 800px;
+    min-height: 500px;
+
     width: 75%;
     height: 100%;
 
@@ -28,19 +37,27 @@
     display: flex;
     flex-direction: column;
 
+    align-items: center;
+
+    min-width: inherit;
+    min-height: 500px;
+
     width: 90%;
-    height: 95%;
+    height: 98%;
 }
 
 /* user list */
 .user-card {
     display: flex;
     flex-direction: row;
-    width: 100%;
-    height: 15%;
+    min-width: 320px;
+    min-height: 100px;
+    max-width: 350px;
+    max-height: 100px;
+    width: 95%;
     border: solid 2px rgb(48, 197, 255);
     border-radius: 25px;
-    margin-bottom: 5px;
+    margin-top: 10px;
     cursor: pointer;
     background-color: rgb(48, 197, 255);
 }
@@ -49,6 +66,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    min-width: 90px;
+    min-height: 90px;
     width: 30%;
     height: 100%;
     margin-left: 5px;
@@ -65,6 +84,8 @@
     display: flex;
     justify-content: left;
     align-items: center;
+    min-width: 160px;
+    min-height: 100px;
     width: 50%;
     height: 100%;
     text-align: left;
@@ -89,8 +110,15 @@
     display: flex;
     flex-direction: column;
 
-    width: 95%;
+    width: 90%;
     height: 80%;
+
+    margin-left: 2%;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
 
     margin-top: 2%;
 }
@@ -136,8 +164,7 @@
     justify-content: space-around;
 
     width: 100%;
-    min-height: 10%;
-    max-height: 20%;
+    min-height: 50px;
 
     margin-top: auto;
 }

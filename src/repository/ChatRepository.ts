@@ -20,7 +20,7 @@ export class ChatRepository {
         });
     }
 
-    public async findAllUserIdChats(user: User): Promise<Chat[]> {
+    public async findAllUsersIdChats(user: User): Promise<Chat[]> {
         return await this.repository
             .createQueryBuilder("chat")
             .innerJoin("chat.participants", "participant")
@@ -30,7 +30,7 @@ export class ChatRepository {
 
     public async createChat(name: string, participants: User[]): Promise<Chat> {
         const chat = this.repository.create({
-            name: "Chat",
+            name: name,
             participants,
         });
         return this.repository.save(chat);
@@ -43,13 +43,5 @@ export class ChatRepository {
 
     public async deleteChat(id: number): Promise<void> {
         await this.repository.delete(id);
-    }
-
-    public async getMessages(chatId: number): Promise<Message[] | undefined> {
-        const chat = await this.findById(chatId);
-        if (chat) {
-            return chat.messages;
-        }
-        return undefined;
     }
 }

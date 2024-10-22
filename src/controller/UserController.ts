@@ -53,7 +53,7 @@ export class UserController {
                 return;
             }
 
-            const chats = await this.chatRepository.findAllUserIdChats(user);
+            const chats = await this.chatRepository.findAllUsersIdChats(user);
             res.status(200).send(chats);
         });
 

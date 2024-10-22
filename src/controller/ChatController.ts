@@ -41,7 +41,7 @@ export class ChatController {
             // get all messages from chat
             var messages: Message[] | undefined;
             try {
-                messages = await this.chatRepository.getMessages(chat.chatId);
+                messages = await this.messageRepository.getChatMessages(chat);
             } catch (error) {
                 res.status(400).send({ message: "/chat/search: couldn't determine chatId: " + error });
                 return;
