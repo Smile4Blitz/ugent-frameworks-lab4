@@ -2,7 +2,7 @@
     display: flex;
     min-width: fit-content;
     min-height: fit-content;
-    
+
     width: 75vw;
     height: 80vh;
     overflow: hidden;
@@ -44,6 +44,10 @@
 
     width: 90%;
     height: 98%;
+
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: thin;
 }
 
 /* user list */
@@ -102,8 +106,43 @@
 .message-chats {
     display: flex;
     flex-direction: column;
+    max-width: 1000px;
+    width: 1000px;
+    flex-direction: column;
     justify-content: center;
     justify-content: space-between;
+}
+
+.message-chats-participants {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 1000px;
+    min-height: 100px;
+    max-height: 100px;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    scrollbar-width: none;
+}
+
+.message-chats-participants .message-chat-participant {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    height: 100%;
+}
+
+.message-chat-participant img {
+    height: 80%;
+    border-radius: 50%;
+    margin-top: 5px;
+}
+
+.message-chat-participant span {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
 }
 
 .message-chats-bounds {
@@ -111,7 +150,7 @@
     flex-direction: column;
 
     width: 90%;
-    height: 80%;
+    height: 60%;
 
     margin-left: 2%;
 
@@ -217,14 +256,58 @@
 }
 
 /* dev mode to quickly change user */
-.dev-user-picker {
+.dev {
+    display: flex;
+    flex-direction: column;
     z-index: 100;
     position: absolute;
     top: 10px;
     right: 10px;
+
+    padding: 5px;
+    border-radius: 5px;
+
+    background-color: #6e7271;
 }
 
-.dev-user-picker select {
+.dev p {
     width: 200px;
+    height: fit-content;
+    text-align: center;
+    color: white;
+}
+
+.dev select {
+    width: 200px;
+    height: 25px;
+    margin: 5px;
+}
+
+.dev button {
+    width: 200px;
+    height: 25px;
+    margin: 5px;
+}
+
+.dev dialog {
+    width: fit-content;
+    height: fit-content;
+}
+
+.dev dialog form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: fit-content;
+}
+
+.dev dialog select {
+    width: 300px;
+    height: 200px;
+}
+
+.dev dialog button {
+    width: 300px;
     height: 25px;
 }

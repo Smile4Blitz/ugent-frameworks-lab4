@@ -1,6 +1,5 @@
 import { DataSource, Repository } from "typeorm";
 import { Message } from "../entity/Message";
-import { AppDataSource } from "../data/DataSource";
 import { Chat } from "../entity/Chat";
 import { User } from "../entity/User";
 import { ARepository } from "../interface/ARepository";
@@ -8,14 +7,14 @@ import { ARepository } from "../interface/ARepository";
 export class MessageRepository extends ARepository {
     private repository: Repository<Message>;
 
-    constructor() {
-        super();
+    constructor(dataSource: DataSource) {
+        super(dataSource);
         this.repository = this.dataSource.getRepository(Message);
     }
 
     public async findById(messageId: number): Promise<Message | undefined> {
-        const result = await this.repository.findOne({ where: { messageId } });
-        return result != null ? result : undefined;
+        const message: Message | null = await this.repository.findOne({ where: { messageId } });
+        return message ? message : undefined;
     }
 
     public async createMessage(
@@ -33,7 +32,7 @@ export class MessageRepository extends ARepository {
     }
 
     public async getChatMessages(chat: Chat): Promise<Message[]> {
-        return await this.repository
+        return this.repository
             .createQueryBuilder("message")
             .leftJoinAndSelect("message.sender", "sender")
             .where({ chat })

@@ -11,7 +11,7 @@ export class Chat {
     @Column()
     name!: string;
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => User, { lazy: true })
     @JoinTable()
     participants!: User[];
 

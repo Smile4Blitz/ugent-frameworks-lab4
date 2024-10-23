@@ -1,16 +1,14 @@
 import { DataSource, Repository } from "typeorm";
 import { Chat } from "../entity/Chat";
-import { AppDataSource } from "../data/DataSource";
 import { ARepository } from "../interface/ARepository";
 import { User } from "../entity/User";
 import { Message } from "../entity/Message";
 
 export class ChatRepository extends ARepository {
-
     private repository: Repository<Chat>;
 
-    constructor() {
-        super();
+    constructor(dataSource: DataSource) {
+        super(dataSource);
         this.repository = this.dataSource.getRepository(Chat);
     }
 
@@ -21,8 +19,18 @@ export class ChatRepository extends ARepository {
         });
     }
 
+    public async getChatParticipantsWithProfiles(chatId: number): Promise<any> {
+        return this.dataSource
+            .getRepository(Chat)
+            .createQueryBuilder('chat')
+            .leftJoinAndSelect('chat.participants', 'user')
+            .leftJoinAndSelect('user.profile', 'profile')
+            .where('chat.chatId = :chatId', { chatId })
+            .getOne();
+    }
+
     public async findAllUsersIdChats(user: User): Promise<Chat[]> {
-        return await this.repository
+        return this.repository
             .createQueryBuilder("chat")
             .innerJoin("chat.participants", "participant")
             .where("participant.userId = :userId", { userId: user.userId })
@@ -30,10 +38,7 @@ export class ChatRepository extends ARepository {
     }
 
     public async createChat(name: string, participants: User[]): Promise<Chat> {
-        const chat = this.repository.create({
-            name: name,
-            participants,
-        });
+        const chat = this.repository.create({ name, participants });
         return this.repository.save(chat);
     }
 

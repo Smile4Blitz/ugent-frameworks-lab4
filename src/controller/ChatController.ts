@@ -21,102 +21,93 @@ export class ChatController extends AController {
     }
 
     protected setupRoutes(): void {
-        // get messages from a chat
         this.app.get('/chat/:id/messages', async (req: Request, res: Response) => {
-            // check parameters are present
-            const chatId = Number(req.params.id).valueOf();
-            console.log("looking for chat " + chatId + " messages.");
-            if (chatId === undefined) {
-                res.status(400).send({ message: "/chat/:id/messages: Couldn't find id query parameter." });
-                return;
+            const chatId = Number(req.params.id);
+            if (isNaN(chatId)) {
+                return res.status(400).send({ message: "/chat/:id/messages: Couldn't find id query parameter." });
             }
 
-            // check if chat with id exists
-            const chat: Chat | null = await this.chatRepository.findById(chatId); // fails on joinColumns
-            if (chat == null) {
-                res.status(404).send({ message: "/chat/:id/messages: Chat with chatId " + req.params.id + " doesn't exist." });
-                return;
+            const chat: Chat | null = await this.chatRepository.findById(chatId);
+            if (!chat) {
+                return res.status(404).send({ message: "/chat/:id/messages: Chat with chatId " + chatId + " doesn't exist." });
             }
 
-            // get all messages from chat
-            var messages: Message[];
             try {
-                messages = await this.messageRepository.getChatMessages(chat);
+                const messages: Message[] = await this.messageRepository.getChatMessages(chat);
+                res.status(200).send(messages);
             } catch (error) {
                 res.status(500).send({ message: "/chat/search: couldn't determine chatId: " + error });
-                return;
             }
-
-            res.status(200).send(messages);
         });
 
-        // create message in a chat
+        this.app.get('/chat/:id/users', async (req: Request, res: Response) => {
+            const chatId = Number(req.params.id);
+            if (isNaN(chatId)) {
+                return res.status(400).json({ message: "Couldn't find id parameter." });
+            }
+
+            try {
+                const chatParticipants = await this.chatRepository.getChatParticipantsWithProfiles(chatId);
+                if (!chatParticipants) {
+                    return res.status(404).json({ message: "Couldn't find chat with id." });
+                }
+                res.status(200).json(chatParticipants);
+            } catch (error) {
+                res.status(500).json({ message: "/chat/:id/users: Error retrieving users: " + error });
+            }
+        });
+
         this.app.post('/chat/:id/messages/create', express.json(), async (req: Request, res: Response) => {
-            // get & check params
-            const chatId = Number(req.params.id).valueOf();
-            const senderId = Number(req.body.sender).valueOf();
+            const chatId = Number(req.params.id);
+            const senderId = Number(req.body.sender);
             const content = req.body.content;
 
-            if (chatId == undefined || senderId == undefined || content == undefined) {
-                res.status(400).send({ message: "/chat/:id/messages/create: Couldn't find all required parameters." });
-                return;
+            if (isNaN(chatId) || isNaN(senderId) || !content) {
+                return res.status(400).send({ message: "/chat/:id/messages/create: Couldn't find all required parameters." });
             }
 
-            // find chat
-            console.log("Looking for chat with id " + chatId);
             const chat: Chat | null = await this.chatRepository.findById(chatId);
-            if (chat == null) {
-                res.status(404).send({ message: "/chat/:id/messages: Couldn't find chat with id " + req.query.id });
-                return;
+            if (!chat) {
+                return res.status(404).send({ message: "/chat/:id/messages: Couldn't find chat with id " + chatId });
             }
 
-            // find sender
-            console.log("Looking for user with id " + senderId);
             const sender: User | undefined = await this.userRepository.findById(senderId);
-            if (sender == undefined) {
-                res.status(404).send({ message: "/chat/:id/messages: Couldn't find user with id " + req.query.sender });
-                return;
+            if (!sender) {
+                return res.status(404).send({ message: "/chat/:id/messages: Couldn't find user with id " + senderId });
             }
 
-            // create message
-            console.log("Creating message for chat: " + chat.chatId + " send by " + sender.name + " with message " + content);
             const message: Message = await this.messageRepository.createMessage(chat, sender, content);
-            if (await this.chatRepository.addMessage(chat, message) != undefined)
+            if (await this.chatRepository.addMessage(chat, message) != undefined) {
                 res.status(201).send();
-            else
+            } else {
                 res.status(500).json({ message: "/chat/:id/messages: Couldn't create message for chat with id & user with id" });
+            }
         });
 
-        // create a chat
         this.app.post('/chat/create', express.json(), async (req: Request, res: Response) => {
             const name = req.body.name;
             const participants = req.body.participants;
 
-            // check parameters
-            if (name == undefined || participants == undefined) {
-                res.status(400).send({ message: "/chat/create: Couldn't find param name or participants." });
-                return;
+            if (!name || !participants || !Array.isArray(participants)) {
+                return res.status(400).send({ message: "Missing name or participants in request body." });
             }
 
-            // check all participants
-            const users: Array<User> = new Array<User>();
-            await Promise.all(participants.map(async (participant: { id: string; }) => {
-                console.log("looking for user with id: " + Number(participant.id).valueOf());
-                const user: User | undefined = await this.userRepository.findById(Number(participant.id).valueOf());
-                if (user instanceof User) {
-                    console.log("adding " + user.name);
-                    users.push(user);
-                }
+            const users: User[] = [];
+            await Promise.all(participants.map(async (participant: { id: string }) => {
+                const user = await this.userRepository.findById(Number(participant.id));
+                if (user) users.push(user);
             }));
 
-            // After all participants have been processed, check if users were found
             if (users.length > 0) {
-                this.chatRepository.createChat(name, users);
-                res.status(201).send();
+                try {
+                    await this.chatRepository.createChat(name, users);
+                    res.status(201).send({ message: "Chat created successfully." });
+                } catch (error) {
+                    res.status(500).send({ message: "An error occurred while creating the chat." });
+                }
             } else {
-                res.status(400).send({ message: "/chat/create: Couldn't find participants." });
+                res.status(400).send({ message: "No valid participants found." });
             }
         });
     }
-
 }

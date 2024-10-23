@@ -8,7 +8,7 @@
     <title>Message App</title>
 </head>
 
-<body>
+<body style="justify-content: center; width: 100vw; height: 100vh; overflow: hidden;">
     <div
         style="position: fixed; top: -2vh; left: -2vw; width: 105vw; height: 105vh; background-image: url('../img/background.jpg'); background-size: cover; background-position: center; filter: blur(5px); z-index: -1;">
     </div>
@@ -28,26 +28,27 @@
                 </div>
             </div>
             <div class="message-chats">
+                <div id="message-chats-participants" class="message-chats-participants">
+                    <div class="message-chat-participant">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXJA32WU4rBpx7maglqeEtt3ot1tPIRWptxA&s"
+                            alt="image">
+                        <span>username</span>
+                    </div>
+                </div>
                 <div id="message-chats-bounds" class="message-chats-bounds">
                     <div class="message-card">
                         <div class="sender-bubble">
-                            <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
-                            dummy text ever since the 1500s, when an unknown printer</span>
+                            <span>message</span>
                         </div>
                     </div>
                     <div class="message-card">
                         <div class="receiver-bubble">
-                            <span>Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content
-                            here', making it look like readable English</span>
+                            <span>message</span>
                         </div>
                     </div>
                     <div class="message-card">
                         <div class="receiver-bubble">
-                            <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
-                            dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
-                            book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
-                            unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
-                            recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</span>
+                            <span>message</span>
                         </div>
                     </div>
                 </div>
@@ -62,9 +63,27 @@
             </div>
         </div>
     </div>
-    <div class="dev-user-picker">
+    <div class="dev">
+        <p>Dev console</p>
+        <button onclick="clickCreateUser()">Create New User</button>
+        <button onclick="clickCreateChat()">Create New Chat</button>
+        <dialog id="chat-create-dialog">
+            <form method="dialog">
+                <label>Chat name:<input id="chat-create-name" type="text" required></label>
+                <select id="chat-create-users" multiple>
+                </select>
+                <button type="submit" onclick="createChat()">Submit</button>
+                <button onclick="document.getElementById('chat-create-dialog').close()">Cancel</button>
+            </form>
+        </dialog>
+        <dialog id="user-create-dialog">
+            <form method="dialog">
+                <label>Username:<input id="user-create-name" type="text" required></label>
+                <button type="submit" onclick="createUser()">Submit</button>
+                <button onclick="document.getElementById('user-create-dialog').close()">Cancel</button>
+            </form>
+        </dialog>
         <select name="user-profile-select" id="user-profile-select" onchange="populateChats(this)">
-            <option value="abc">abc</option>
         </select>
     </div>
 </body>

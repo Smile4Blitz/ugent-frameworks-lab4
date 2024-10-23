@@ -1,58 +1,54 @@
 import { DataSource, In, Repository } from "typeorm";
 import { User } from "../entity/User";
-import { AppDataSource } from "../data/DataSource";
 import { ARepository } from "../interface/ARepository";
 
 export class UserRepository extends ARepository {
     private repository: Repository<User>;
 
-    constructor() {
-        super();
+    constructor(dataSource: DataSource) {
+        super(dataSource);
         this.repository = this.dataSource.getRepository(User);
     }
 
-    public async findAllUsers(): Promise<User[] | undefined> {
+    public async findAllUsers(): Promise<User[]> {
         return this.repository.find();
     }
 
-    // input should always be an Array<String> but leaving string option anyway since it maybe useful in the future
-    public async findByName(name: string | Array<String>): Promise<User[] | undefined> {
+    public async findByName(name: string | string[]): Promise<User[]> {
         if (Array.isArray(name)) {
-            return await this.repository.find({
-                where: {
-                    name: In(name),
-                },
+            return this.repository.find({
+                where: { name: In(name) },
             });
-        }
-        else {
+        } else {
             const user = await this.repository.findOne({
-                where: { name }
+                where: { name },
             });
-            return user ? [user] : undefined;
+            return user ? [user] : [];
         }
     }
 
     public async findById(userId: number): Promise<User | undefined> {
-        const user = await this.repository.findOne({ where: { userId } });
+        const user: User | null = await this.repository.findOne({ where: { userId } });
         return user ? user : undefined;
     }
 
     public async createUser(name: string): Promise<User> {
-        const user = this.repository.create({ name });
+        const user = this.repository.create({
+            name,
+            profile: {
+                profileImageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXJA32WU4rBpx7maglqeEtt3ot1tPIRWptxA&s'
+            }
+        });
         return this.repository.save(user);
     }
 
-    public async deleteUser(id: number): Promise<Boolean> {
+    public async deleteUser(id: number): Promise<boolean> {
         const result = await this.repository.delete(id);
-        return typeof result.affected == 'number' && result.affected > 0 ? true : false;
+        return result.affected !== 0;
     }
 
-    // case sensitive, need to implement lowercase only solution here also (see post createUser for reference)
-    public async updateUser(user: User): Promise<Boolean> {
-        const result = await this.repository.update({
-            userId: user.userId
-        }, user);
-
-        return typeof result.affected == 'number' && result.affected > 0 ? true : false;
+    public async updateUser(user: User): Promise<boolean> {
+        const result = await this.repository.update({ userId: user.userId }, user);
+        return result.affected !== 0;
     }
 }

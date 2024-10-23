@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne } from "typeorm";
+import { Profile } from './Profile';
 
 @Entity()
 export class User {
@@ -8,4 +9,7 @@ export class User {
 
     @Column()
     name!: string;
+
+    @OneToOne(() => Profile, profile => profile.user, { cascade: true })
+    profile!: Profile;
 }
