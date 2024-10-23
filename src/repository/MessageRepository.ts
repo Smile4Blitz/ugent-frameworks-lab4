@@ -12,11 +12,8 @@ export class MessageRepository extends ARepository {
         this.repository = this.dataSource.getRepository(Message);
     }
 
-    public async findById(messageId: number): Promise<Message | undefined> {
-        const message: Message | null = await this.repository.findOne({ where: { messageId } });
-        return message ? message : undefined;
-    }
-
+    // creates a message
+    // TODO: send update to websocket
     public async createMessage(
         chat: Chat,
         sender: User,
@@ -31,6 +28,7 @@ export class MessageRepository extends ARepository {
         return this.repository.save(message);
     }
 
+    // all messages from a specific chat
     public async getChatMessages(chat: Chat): Promise<Message[]> {
         return this.repository
             .createQueryBuilder("message")

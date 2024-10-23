@@ -19,3 +19,6 @@ see /documentation/api-design.md.
 - [x] opvraging die gebruik maakt van parameters
 - [ ] objecten aanpassen.
 - [ ] gebruik websocket (for new messages?)
+
+### Extra
+web app messages don't show sender, just colors.

@@ -36,17 +36,19 @@ export class UserRepository extends ARepository {
         const user = this.repository.create({
             name,
             profile: {
-                profileImageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXJA32WU4rBpx7maglqeEtt3ot1tPIRWptxA&s'
+                profileImageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXJA32WU4rBpx7maglqeEtt3ot1tPIRWptxA&s' // placeholder
             }
         });
         return this.repository.save(user);
     }
 
+    // unused
     public async deleteUser(id: number): Promise<boolean> {
         const result = await this.repository.delete(id);
         return result.affected !== 0;
     }
 
+    // unused
     public async updateUser(user: User): Promise<boolean> {
         const result = await this.repository.update({ userId: user.userId }, user);
         return result.affected !== 0;

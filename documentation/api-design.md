@@ -3,172 +3,284 @@ Note: Asked teacher if authentication, etc. had to implemented as well, agreed t
 
 ### API documentation
 Each API-call is documented as followed:
-- Title: TypeOfRequest Endpoint
-- Requirements: required parameters
-- Filters: what kind of filter parameters are available
-- Response: the expected response
-- Exceptions:
-    - responses when exceptions occur
+#### `TypeOfRequest` `Endpoint`
+- `Requirements`: required parameters
+- `Filters`: what kind of filter parameters are available
+- `Response`:
+    `response status code` the expected response
+- `Exceptions`:
+    `response status code`: responses when exceptions occur
 
 Below each specification will also be a codeblock with the respose data, if no codeblock is shown it means the response does not contain any.
 
+### API Documentation
+
 ### Website
-#### GET /
-- Requirements: none
-- Filters: none
-- Response: 200 (text/html)
-- Exceptions:
-    - none
+#### **GET /**
+- **Response:** 
+    `301` Redirects to `/app`.
+- **Exceptions:**
+    - `302` Redirect: If the user accesses the root URL `/`, they are redirected to `/app`.
 
-**Note**: This is where session tokens should be checked to decide if a redirect to the '/app' or '/login' should happen, but this feature isn't required to implement in this project so I immediately redirect to '/app'.
+```json
+{
+    "status": 302,
+    "location": "/app"
+}
+```
 
-#### GET /app
-- Requirements: none
-- Filters: none
-- Response: 200 (text/html)
-- Exceptions:
-    - none
+---
 
-**Note**: Actual application page, where users, chats & messages are loaded.
+#### **GET /app**
+- **Response:** 
+    `200` Serves the `app.html` file from the `www/pages` directory.
+- **Exceptions:**
+    - `404` Not Found: If the `app.html` file is missing or cannot be found.
 
-#### GET /login
-- Requirements: none
-- Filters: none
-- Response: 200 (text/html)
-- Exceptions:
-    - none
+---
 
-**Note**: This is where the authentication & session tokens should be exchanged but this feature isn't required to implement in this project so I immediately redirect to '/app'
+#### **GET /login**
+- **Response:** 
+    `301` Redirects to `/app` (since authentication isn't implemented).
+- **Exceptions:**
+    - `302` Redirect: If the user accesses the `/login` URL, they are redirected to `/app`.
+
+```json
+{
+    "status": 302,
+    "location": "/app"
+}
+```
 
 ### Users
-#### GET /users
-- Requirements: none
-- Filters: id,name
-- Response: 200 (application/json)
-- Exceptions:
-    - 404: users not found.
-    - 500: Couldn't search for users.
+#### 1. **GET /users**
+- **Requirements:**  
+  - Optional query parameters:
+    - `id` (number) - ID of the user to find
+    - `name` (string or array of strings) - Name(s) of the user(s) to find
+
+- **Filters:**  
+  No additional filters implemented yet (e.g., sorting or order options).
+
+- **Response:**  
+  `200` A list of users or a single user if `id` is provided.
 
 ```json
 [
     {
-        "id":1,
-        "name": "name"
+        "userId": 1,
+        "name": "userA"
+    },
+    {
+        "userId": 2,
+        "name": "userB"
     }
 ]
 ```
 
-#### GET /users/:id/chats
-- Requirements: id (url parameter)
-- Filters: none
-- Response: 200 (application/json)
-- Exceptions:
-    - 400: couldn't determine id.
-    - 500: couldn't search for user with id.
-    - 404: users with userId not found.
+- **Exceptions:**  
+    - `404` if no users are found.
+    - `500` if an issue occurs while fetching users.
+    
+```json
+{
+    "message": "/users/search: Couldn't fetch users: error message"
+}
+```
+
+---
+
+#### 2. **GET /users/:id/chats**
+- **Requirements:**  
+  - `id` (number) - The ID of the user whose chats you want to fetch
+
+- **Response:**  
+  `200` A list of chats the user is part of.
 
 ```json
 [
     {
         "chatId": 1,
-        "name": "name"
+        "participants": ["userA", "userB"],
+        "content": "Hello!"
+    },
+    {
+        "chatId": 2,
+        "participants": ["John Doe", "Someone Else"],
+        "content": "How are you?"
     }
 ]
 ```
 
-#### POST /users/create
-- Requirements: name (application/json)
-- Filters: none
-- Response: 201 (application/json)
-- Exceptions:
-    - 400: Couldn't create user.
-    - 500: Couldn't create user.
-
+- **Exceptions:**  
+    - `400` if `id` is not provided or invalid.
+    - `404` if the user is not found.
+    - `500` if an issue occurs while fetching chats.
+    
 ```json
 {
-    "userId": 1
-    "name": "name",
+    "message": "Couldn't determine user id."
 }
 ```
 
-#### POST /users/update
-- Requirements: id, name (application/json)
-- Filters: none
-- Response: 200 (application/json)
-- Exceptions:
-    - 400: Couldn't find id or name in parameters.
-    - 500: Couldn't search for user with id.
-    - 404: Couldn't find existing user with id.
-    - 500: Couldn't update user.
+---
 
+#### 3. **POST /users/create**
+- **Requirements:**  
+  - `name` (string) - Name of the user to create
+
+- **Response:**  
+  `201` if the user is successfully created.
+
+- **Exceptions:**  
+    - `400` if the `name` parameter is missing.
+    - `500` if an issue occurs while creating the user.
+    
 ```json
-[
-    {
-        "id":1,
-        "name": "name"
-    }
-]
+{
+    "message": "/users/create: name parameter not found."
+}
 ```
 
-#### DELETE /users/delete
-- Requirements: id (application/json)
-- Filters: none
-- Response: 200
-- Exceptions:
-    - 400: Couldn't find id in parameters.
-    - 500: Couldn't seach for user with id.
-    - 404: Couldn't find existing user with id.
-    - 500: Couldn't delete user.
+---
 
+#### 4. **PUT /users/update**
+- **Requirements:**  
+  - `id` (number) - ID of the user to update
+  - `name` (string) - New name of the user
+
+- **Response:**  
+  `200` if the user is successfully updated.
+
+- **Exceptions:**  
+    - `400` if `id` or `name` parameters are missing.
+    - `404` if the user is not found.
+    - `500` if an issue occurs while updating the user.
+    
 ```json
-[
-    {
-        "id":1,
-        "name": "name"
-    }
-]
+{
+    "message": "/users/update: Couldn't search for user: error message"
+}
+```
+
+---
+
+#### 5. **DELETE /users/delete**
+- **Requirements:**  
+  - `id` (string) - ID of the user to delete
+
+- **Response:**  
+  `204` if the user is successfully deleted.
+
+- **Exceptions:**  
+    - `400` if `id` is not provided.
+    - `404` if the user is not found.
+    - `500` if an issue occurs while deleting the user.
+    
+```json
+{
+    "message": "/users/delete: Couldn't determine id parameter."
+}
 ```
 
 ### Chats
-#### GET /chat/:id/messages
-- Requirements: id (application/json)
-- Filters: none
-- Response: 201 (application/json)
-- Exceptions:
-    - 400: Couldn't find id in parameters in request.
-    - 404: Couldn't find chat with id.
-    - 500: Couldn't search for message in chat with id.
+#### 1. **GET /chat/:id/messages**
+- **Requirements**: `id` (Chat ID)
+- **Response**: 
+    `200` Returns all messages that are part of the chat.
+- **Exceptions**:
+    - `400`: If the `id` parameter is missing or invalid.
+    - `404`: If no chat is found with the provided `id`.
+    - `500`: If an error occurs while fetching messages.
 
 ```json
 [
     {
-        "messageId": 1,
-        "timestamp": "2000-01-01T00:00:00.000Z",
+        "id": 1,
+        "sender": "UserA",
         "content": "message",
-        "sender": {
-            "userId": 2,
-            "name": "name"
-        }
+        "timestamp": "2000-01-01T00:00:00Z"
+    },
+    {
+        "id": 2,
+        "sender": "User 2",
+        "content": "message",
+        "timestamp": "2000-01-01T00:00:00Z"
     }
 ]
 ```
 
-#### POST /chat/create
-- Requirements: name, participants (application/json)
-- Filters: none
-- Response: 201
-- Exceptions:
-    - 400: Couldn't find name, participants parameters in request.
-    - 400: Couldn't find participants.
+---
 
-#### POST /chat/:id/messages/create
-- Requirements: id, sender, content (application/json)
-- Filters: none
-- Response: 201
-- Exceptions:
-    - 400: Couldn't find id, sender, content parameters in request.
-    - 404: Couldn't find chat with id (id parameter).
-    - 404: Couldn't find user with id (sender parameter).
-    - 400: Couldn't search for message in chat with id.
-    - 404: Couldn't find messages in chat with id.
-    - 500: Couldn't create message for chat with id & user with id
+#### 2. **GET /chat/:id/users**
+- **Requirements**: `id` (Chat ID)
+- **Response**: 
+    `200` Returns all users that are part of the chat.
+- **Exceptions**:
+    - `400`: If the `id` parameter is missing or invalid.
+    - `404`: If no chat is found with the provided `id`.
+    - `500`: If an error occurs while fetching users.
+
+```json
+[
+    "chatId": 1,
+    "name": "name",
+    "__participants__": [
+        {
+            "userId": 1,
+            "name": "userA",
+            "profile": {
+                "profileId": 1,
+                "profileImageURL": "url"
+            }
+        },
+        {
+            "userId": 2,
+            "name": "userB",
+            "profile": {
+                "profileId": 2,
+                "profileImageURL": "url"
+            }
+        }
+    ]
+]
+```
+
+---
+
+#### 3. **POST /chat/:id/messages/create**
+- **Requirements**:
+    - `id` (Chat ID in URL)
+    - `sender` (User ID in request body)
+    - `content` (Message content in request body)
+- **Response**: 
+    `201` No response body
+- **Exceptions**:
+    - `400`: If `chatId`, `senderId`, or `content` is missing or invalid.
+    - `404`: If the chat or user is not found with the provided `id`.
+    - `500`: If an error occurs while creating the message.
+
+---
+
+#### 4. **POST /chat/create**
+- **Requirements**:
+    - `name` (Chat name in request body)
+    - `participants` (Array of participant user IDs in request body)
+- **Response**: 
+    `200` No response body
+- **Exceptions**:
+    - `400`: If `name` or `participants` is missing or invalid.
+    - `500`: If an error occurs while creating the chat.
+
+---
+
+#### 5. **POST /chat/:id/join**
+- **Requirements**:
+    - `id` (Chat ID in URL)
+    - `userId` (User ID in request body)
+- **Response**: 
+    `200` No response body
+- **Exceptions**:
+    - `400`: If `chatId` or `userId` is missing or invalid.
+    - `404`: If the chat or user is not found with the provided `id`.
+    - `500`: If an error occurs while joining the chat.

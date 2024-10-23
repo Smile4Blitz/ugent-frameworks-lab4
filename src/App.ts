@@ -41,7 +41,7 @@ class App {
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
             entities: [User, Chat, Message, Profile, Admin],
-            synchronize: true,
+            synchronize: true
         });
 
         dataSource.initialize().then(() => {
