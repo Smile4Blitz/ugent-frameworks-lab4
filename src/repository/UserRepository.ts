@@ -1,8 +1,9 @@
 import { DataSource, In, Repository } from "typeorm";
 import { User } from "../entity/User";
 import { AppDataSource } from "../data/DataSource";
+import { IRepository } from "../interface/IRepository";
 
-export class UserRepository {
+export class UserRepository implements IRepository {
     private dataSource: DataSource;
     private repository: Repository<User>;
 

@@ -1,0 +1,230 @@
+.message-root {
+    display: flex;
+    min-width: fit-content;
+    min-height: fit-content;
+    
+    width: 75vw;
+    height: 80vh;
+    overflow: hidden;
+    border-radius: 25px;
+}
+
+.message-users {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-width: 360px;
+    min-height: 500px;
+
+    width: 25%;
+    height: 100%;
+    background-color: rgb(174, 236, 239, 0.75);
+}
+
+.message-chats {
+    min-width: 800px;
+    min-height: 500px;
+
+    width: 75%;
+    height: 100%;
+
+    background-color: rgb(128, 222, 217, 0.75);
+}
+
+.message-users-bounds {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    min-width: inherit;
+    min-height: 500px;
+
+    width: 90%;
+    height: 98%;
+}
+
+/* user list */
+.user-card {
+    display: flex;
+    flex-direction: row;
+    min-width: 320px;
+    min-height: 100px;
+    max-width: 350px;
+    max-height: 100px;
+    width: 95%;
+    border: solid 2px rgb(48, 197, 255);
+    border-radius: 25px;
+    margin-top: 10px;
+    cursor: pointer;
+    background-color: rgb(48, 197, 255);
+}
+
+.user-card .user-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 90px;
+    min-height: 90px;
+    width: 30%;
+    height: 100%;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.user-card .user-image img {
+    height: 90px;
+    width: 90px;
+    border-radius: 25%;
+}
+
+.user-card .user-name {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    min-width: 160px;
+    min-height: 100px;
+    width: 50%;
+    height: 100%;
+    text-align: left;
+}
+
+.user-card .user-name span {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 2.5rem;
+    color: white;
+    text-transform: capitalize;
+}
+
+/* user chat */
+.message-chats {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-content: space-between;
+}
+
+.message-chats-bounds {
+    display: flex;
+    flex-direction: column;
+
+    width: 90%;
+    height: 80%;
+
+    margin-left: 2%;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+
+    margin-top: 2%;
+}
+
+.message-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.sender-bubble,
+.receiver-bubble {
+    max-width: 75%;
+    width: fit-content;
+    height: fit-content;
+
+    margin: 5px;
+    padding: 15px;
+
+    color: white;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    border-radius: 25px;
+}
+
+.message-card .sender-bubble {
+    background-color: #30C5FF;
+    margin-left: auto;
+}
+
+.message-card .receiver-bubble {
+    background-color: #29BF12;
+    margin-right: auto;
+}
+
+
+/* chat send message */
+.message-send-bounds {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    width: 100%;
+    min-height: 50px;
+
+    margin-top: auto;
+}
+
+.message-send-bounds .chats-send {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+    height: 90%;
+    margin-right: auto;
+    overflow: hidden;
+}
+
+.message-send-bounds .chats-send textarea {
+    width: 95%;
+    min-width: 95%;
+    max-width: 95%;
+    min-height: 40px;
+    height: 40px;
+    max-height: 100px;
+    border-radius: 5px;
+    border: 0;
+    padding: 5px;
+    background-color: #30C5FF;
+    scrollbar-width: none;
+    color: white;
+    text-align: start;
+    align-items: start;
+    resize: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.message-send-bounds .chats-send textarea:focus {
+    outline: none;
+}
+
+.message-send-bounds .send-button {
+    width: min-content;
+    height: 100%;
+
+    padding: 5px;
+    margin-right: 10px;
+
+    cursor: pointer;
+}
+
+.message-send-bounds .send-button img {
+    width: 50px;
+}
+
+/* dev mode to quickly change user */
+.dev-user-picker {
+    z-index: 100;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.dev-user-picker select {
+    width: 200px;
+    height: 25px;
+}

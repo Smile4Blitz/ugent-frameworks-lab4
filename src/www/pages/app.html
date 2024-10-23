@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="../css/app.css">
     <title>Message App</title>
 </head>
 
 <body>
     <div
-        style="position: fixed; top: -2vh; left: -2vw; width: 105vw; height: 105vh; background-image: url('./img/background.jpg'); background-size: cover; background-position: center; filter: blur(5px); z-index: -1;">
+        style="position: fixed; top: -2vh; left: -2vw; width: 105vw; height: 105vh; background-image: url('../img/background.jpg'); background-size: cover; background-position: center; filter: blur(5px); z-index: -1;">
     </div>
     <div style="height: 95vh; margin: 0; display: flex; justify-content: center; align-items: center">
         <div class="message-root">
@@ -53,10 +53,10 @@
                 </div>
                 <div id="message-send-bounds" class="message-send-bounds">
                     <div class="chats-send">
-                        <textarea name="" id="chats-send-content" onkeypress="enterToSend()"></textarea>
+                        <textarea name="" id="chats-send-content"></textarea>
                     </div>
-                    <div class="send-button">
-                        <img src="./img/send-button.png" alt="">
+                    <div class="send-button" onclick="sendMessage()">
+                        <img src="../img/send-button.png" alt="">
                     </div>
                 </div>
             </div>
@@ -69,6 +69,6 @@
     </div>
 </body>
 
-<script src="./js/index.js"></script>
+<script src="../js/app.js"></script>
 
 </html>

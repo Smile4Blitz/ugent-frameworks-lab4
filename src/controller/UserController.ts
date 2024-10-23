@@ -1,17 +1,18 @@
 import express, { Request, Response, Application } from 'express';
+import { IController } from '../interface/IController';
 import { UserRepository } from '../repository/UserRepository';
 import { User } from '../entity/User';
 import { ChatRepository } from '../repository/ChatRepository';
 
-export class UserController {
+export class UserController implements IController {
     private app: Application;
     private userRepository: UserRepository;
     private chatRepository: ChatRepository;
 
-    constructor(app: Application) {
+    constructor(app: Application, userRepository: UserRepository, chatRepository: ChatRepository) {
         this.app = app;
-        this.userRepository = new UserRepository();
-        this.chatRepository = new ChatRepository();
+        this.userRepository = userRepository;
+        this.chatRepository = chatRepository;
         this.setupRoutes();
     }
 
@@ -47,7 +48,7 @@ export class UserController {
                 return;
             }
 
-            const user : User | undefined = await this.userRepository.findById(Number(req.params.id).valueOf());
+            const user: User | undefined = await this.userRepository.findById(Number(req.params.id).valueOf());
             if (user == undefined) {
                 res.status(400).send({ message: "Couldn't find user with id " + req.params.id });
                 return;

@@ -5,11 +5,11 @@ import { Message } from "../entity/Message";
 
 export class AppDataSource {
     private static dataSource: DataSource;
-    private static isInitialized : Boolean = false;
+    private static initializationPromise: Promise<boolean> | null = null;
 
-    public static initialize(): void {
-        if (!this.dataSource) {
-            this.dataSource = new DataSource({
+    public static async initialize(): Promise<boolean> {
+        if (!AppDataSource.dataSource) {
+            AppDataSource.dataSource = new DataSource({
                 type: "postgres",
                 host: process.env.POSTGRES_HOST,
                 port: Number(process.env.POSTGRES_PORT),
@@ -17,28 +17,36 @@ export class AppDataSource {
                 password: process.env.POSTGRES_PASSWORD,
                 database: process.env.POSTGRES_DB,
                 entities: [User, Chat, Message],
-                synchronize: false, // creates or updates tables, set to false if db already contains those tables, throws errors otherwise
+                synchronize: false,
             });
         }
 
-        if (!this.dataSource.isInitialized) {
-            this.dataSource.initialize()
+        if (!AppDataSource.initializationPromise) {
+            AppDataSource.initializationPromise = AppDataSource.dataSource.initialize()
                 .then(() => {
-                    this.isInitialized = true;
                     console.log("Database initialized successfully.");
+                    return true;
                 })
                 .catch((error) => {
-                    this.isInitialized = false;
                     console.error("Couldn't initialize database: " + error);
-                    throw error;
+                    return false;
                 });
         }
+
+        return AppDataSource.initializationPromise;
     }
 
     public static getInstance(): DataSource {
-        if (!this.isInitialized) {
-            this.initialize();
+        if (!AppDataSource.dataSource) {
+            throw new Error("DataSource is not initialized. You must call `AppDataSource.initialize()` before using `getInstance()`.");
         }
-        return this.dataSource;
+
+        if (!AppDataSource.dataSource.isInitialized) {
+            throw new Error("DataSource initialization is still in progress. Await initialization before proceeding.");
+        }
+
+        return AppDataSource.dataSource;
     }
 }
+
+

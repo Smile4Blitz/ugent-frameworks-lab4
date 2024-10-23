@@ -1,22 +1,23 @@
 import express, { Application, Request, Response } from 'express';
 import { ChatRepository } from '../repository/ChatRepository';
+import { IController } from '../interface/IController';
 import { Message } from '../entity/Message';
 import { UserRepository } from '../repository/UserRepository';
 import { User } from '../entity/User';
 import { Chat } from '../entity/Chat';
 import { MessageRepository } from '../repository/MessageRepository';
 
-export class ChatController {
+export class ChatController implements IController {
     private app: Application;
     private chatRepository: ChatRepository;
     private userRepository: UserRepository;
     private messageRepository: MessageRepository;
 
-    constructor(app: Application) {
+    constructor(app: Application, userRepository: UserRepository, chatRepository: ChatRepository, messageRepository : MessageRepository) {
         this.app = app;
-        this.chatRepository = new ChatRepository();
-        this.userRepository = new UserRepository();
-        this.messageRepository = new MessageRepository();
+        this.chatRepository = chatRepository;
+        this.userRepository = userRepository;
+        this.messageRepository = messageRepository;
         this.setupRoutes();
     }
 

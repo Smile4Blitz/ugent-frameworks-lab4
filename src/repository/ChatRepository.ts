@@ -1,10 +1,11 @@
 import { DataSource, Repository } from "typeorm";
 import { Chat } from "../entity/Chat";
 import { AppDataSource } from "../data/DataSource";
+import { IRepository } from "../interface/IRepository";
 import { User } from "../entity/User";
 import { Message } from "../entity/Message";
 
-export class ChatRepository {
+export class ChatRepository implements IRepository {
     private dataSource: DataSource;
     private repository: Repository<Chat>;
 

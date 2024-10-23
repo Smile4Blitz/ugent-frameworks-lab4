@@ -20,4 +20,3 @@ export class Message {
     @Column()
     content!: string;
 }
-
