@@ -12,7 +12,7 @@ export class ChatController extends AController {
     private userRepository: UserRepository;
     private messageRepository: MessageRepository;
 
-    constructor(app: Application, userRepository: UserRepository, chatRepository: ChatRepository, messageRepository : MessageRepository) {
+    constructor(app: Application, userRepository: UserRepository, chatRepository: ChatRepository, messageRepository: MessageRepository) {
         super(app);
         this.chatRepository = chatRepository;
         this.userRepository = userRepository;
@@ -34,23 +34,20 @@ export class ChatController extends AController {
             // check if chat with id exists
             const chat: Chat | null = await this.chatRepository.findById(chatId); // fails on joinColumns
             if (chat == null) {
-                res.status(400).send({ message: "/chat/:id/messages: Chat with chatId " + req.params.id + " doesn't exist." });
+                res.status(404).send({ message: "/chat/:id/messages: Chat with chatId " + req.params.id + " doesn't exist." });
                 return;
             }
 
             // get all messages from chat
-            var messages: Message[] | undefined;
+            var messages: Message[];
             try {
                 messages = await this.messageRepository.getChatMessages(chat);
             } catch (error) {
-                res.status(400).send({ message: "/chat/search: couldn't determine chatId: " + error });
+                res.status(500).send({ message: "/chat/search: couldn't determine chatId: " + error });
                 return;
             }
 
-            if (messages)
-                res.status(200).send(messages);
-            else
-                res.status(404).send({ message: "/chat/search: couldn't find messages for chatId: " + Number(req.query.id).valueOf() });
+            res.status(200).send(messages);
         });
 
         // create message in a chat
@@ -60,7 +57,7 @@ export class ChatController extends AController {
             const senderId = Number(req.body.sender).valueOf();
             const content = req.body.content;
 
-            if (chatId === undefined || senderId == undefined || content == undefined) {
+            if (chatId == undefined || senderId == undefined || content == undefined) {
                 res.status(400).send({ message: "/chat/:id/messages/create: Couldn't find all required parameters." });
                 return;
             }
@@ -69,24 +66,25 @@ export class ChatController extends AController {
             console.log("Looking for chat with id " + chatId);
             const chat: Chat | null = await this.chatRepository.findById(chatId);
             if (chat == null) {
-                res.status(400).send({ message: "/chat/:id/messages: Couldn't find chat with id " + req.query.id });
+                res.status(404).send({ message: "/chat/:id/messages: Couldn't find chat with id " + req.query.id });
                 return;
             }
-            
+
             // find sender
             console.log("Looking for user with id " + senderId);
             const sender: User | undefined = await this.userRepository.findById(senderId);
             if (sender == undefined) {
-                res.status(400).send({ message: "/chat/:id/messages: Couldn't find user with id " + req.query.sender });
+                res.status(404).send({ message: "/chat/:id/messages: Couldn't find user with id " + req.query.sender });
                 return;
             }
 
             // create message
             console.log("Creating message for chat: " + chat.chatId + " send by " + sender.name + " with message " + content);
             const message: Message = await this.messageRepository.createMessage(chat, sender, content);
-            this.chatRepository.addMessage(chat, message);
-
-            res.status(201).send();
+            if (await this.chatRepository.addMessage(chat, message) != undefined)
+                res.status(201).send();
+            else
+                res.status(500).json({ message: "/chat/:id/messages: Couldn't create message for chat with id & user with id" });
         });
 
         // create a chat
@@ -114,7 +112,7 @@ export class ChatController extends AController {
             // After all participants have been processed, check if users were found
             if (users.length > 0) {
                 this.chatRepository.createChat(name, users);
-                res.status(200).send({ message: "Chat created successfully" });
+                res.status(201).send();
             } else {
                 res.status(400).send({ message: "/chat/create: Couldn't find participants." });
             }

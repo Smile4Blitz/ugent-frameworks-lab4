@@ -10,7 +10,7 @@ export class IndexController extends AController {
 
     protected setupRoutes(): void {
         this.app.get('/', (req: Request, res: Response) => {
-            res.sendFile(path.join(__dirname, '../www/pages', 'index.html'));
+            res.redirect('/app');
         });
 
         this.app.get('/app', (req: Request, res: Response) => {
@@ -18,7 +18,7 @@ export class IndexController extends AController {
         });
 
         this.app.get('/login', (req: Request, res: Response) => {
-            res.sendFile(path.join(__dirname, '../www/pages', 'login.html'));
+            res.redirect('/app');
         });
     }
 }

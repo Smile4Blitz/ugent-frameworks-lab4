@@ -42,14 +42,22 @@ export class UserController extends AController {
 
         // get all chats that the user is part of
         this.app.get('/users/:id/chats', async (req: Request, res: Response) => {
-            if (Number(req.params.id).valueOf() == undefined) {
+            const userId = Number(req.params.id).valueOf();
+            if (userId == undefined) {
                 res.status(400).send({ message: "Couldn't determine user id." });
                 return;
             }
 
-            const user: User | undefined = await this.userRepository.findById(Number(req.params.id).valueOf());
+            var user: User | undefined = undefined;
+            try {
+                user = await this.userRepository.findById(userId);
+            } catch (error) {
+                res.status(500).json({ message: "Couldn't look for user with id." })
+                return;
+            }
+
             if (user == undefined) {
-                res.status(400).send({ message: "Couldn't find user with id " + req.params.id });
+                res.status(404).send({ message: "Couldn't find user with id " + req.params.id });
                 return;
             }
 
@@ -58,32 +66,40 @@ export class UserController extends AController {
         });
 
         this.app.post('/users/create', express.json(), async (req: Request, res: Response) => {
-            const name = req.body.name;
+            const name: string | undefined = req.body.name;
+
+            if (name == undefined) {
+                res.status(400).json({ message: "/users/create: name parameter not found." });
+                return;
+            }
 
             try {
                 const user = await this.userRepository.createUser(name);
                 res.status(201).send(user);
             } catch (error) {
-                res.status(400).json({ message: "/users/create: Couldn't create user: " + error }).send();
+                res.status(500).json({ message: "/users/create: Couldn't create user: " + error }).send();
             }
         });
 
         this.app.put('/users/update', express.json(), async (req: Request, res: Response) => {
-            const id = req.body.id;
+            const id = Number(req.body.id).valueOf();
             const name = req.body.name;
             var user: User | undefined;
 
+            if (id === undefined || name === undefined)
+                res.status(400).json({ message: "/users/update: Couldn't find id and user parameter." });
+
             // find user
             try {
-                user = await this.userRepository.findById(Number(id));
+                user = await this.userRepository.findById(id);
             } catch (error) {
-                res.status(400).json({ message: "/users/update: Couldn't search for user: " + error });
+                res.status(500).json({ message: "/users/update: Couldn't search for user: " + error });
                 return;
             }
 
             // check if user was found
             if (user == undefined) {
-                res.status(400).json({ message: "/users/update: Couldn't find user." }).send();
+                res.status(404).json({ message: "/users/update: Couldn't find user." }).send();
                 return;
             }
 
@@ -95,24 +111,27 @@ export class UserController extends AController {
             if (updateSuccess)
                 res.status(201).send(user);
             else
-                res.status(400).json({ message: "/users/update: Couldn't update user." });
+                res.status(500).json({ message: "/users/update: Couldn't update user." });
         });
 
         this.app.delete('/users/delete', express.json(), async (req: Request, res: Response) => {
-            const id = req.body.id;
+            const id: string | undefined = req.body.id;
             var user: User | undefined;
+
+            if (id === undefined)
+                res.status(400).json({ message: "/users/delete: Couldn't determine id parameter." });
 
             // find user
             try {
                 user = await this.userRepository.findById(Number(id));
             } catch (error) {
-                res.status(400).json({ message: "/users/delete: Couldn't search for user: " + error });
+                res.status(500).json({ message: "/users/delete: Couldn't search for user: " + error });
                 return;
             }
 
             // check if user was found
             if (user == undefined) {
-                res.status(400).json({ message: "/users/delete: Couldn't find user." }).send();
+                res.status(404).json({ message: "/users/delete: Couldn't find user." }).send();
                 return;
             }
 
@@ -120,7 +139,7 @@ export class UserController extends AController {
             if (deleteSuccess)
                 res.status(201).send();
             else
-                res.status(400).json({ message: "/users/delete: Couldn't update user." });
+                res.status(500).json({ message: "/users/delete: Couldn't delete user." });
         });
     }
 
