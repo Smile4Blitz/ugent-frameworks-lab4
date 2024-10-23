@@ -5,9 +5,7 @@ This is a simple messaging app.
 see /documentation/api-design.md.
 
 ### Requirements
-De datalaag bestaat uit minstens één DAO-object waaraan je objecten kan opvragen,
-toevoegen, aanpassen, ...
-
+- [x] De datalaag bestaat uit minstens één DAO-object waaraan je objecten kan opvragen,toevoegen, aanpassen, ...
 - [x] 1-1-relatie
 - [x] 1-n-relatie
 - [x] n-n-relatie
@@ -20,3 +18,4 @@ toevoegen, aanpassen, ...
 - [x] "eager" loading
 - [x] opvraging die gebruik maakt van parameters
 - [ ] objecten aanpassen.
+- [ ] gebruik websocket (for new messages?)
