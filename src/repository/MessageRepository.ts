@@ -3,14 +3,13 @@ import { Message } from "../entity/Message";
 import { AppDataSource } from "../data/DataSource";
 import { Chat } from "../entity/Chat";
 import { User } from "../entity/User";
-import { IRepository } from "../interface/IRepository";
+import { ARepository } from "../interface/ARepository";
 
-export class MessageRepository implements IRepository {
-    private dataSource: DataSource;
+export class MessageRepository extends ARepository {
     private repository: Repository<Message>;
 
     constructor() {
-        this.dataSource = AppDataSource.getInstance();
+        super();
         this.repository = this.dataSource.getRepository(Message);
     }
 

@@ -1,27 +1,26 @@
 import express, { Application, Request, Response } from 'express';
 import { ChatRepository } from '../repository/ChatRepository';
-import { IController } from '../interface/IController';
+import { AController } from '../interface/AController';
 import { Message } from '../entity/Message';
 import { UserRepository } from '../repository/UserRepository';
 import { User } from '../entity/User';
 import { Chat } from '../entity/Chat';
 import { MessageRepository } from '../repository/MessageRepository';
 
-export class ChatController implements IController {
-    private app: Application;
+export class ChatController extends AController {
     private chatRepository: ChatRepository;
     private userRepository: UserRepository;
     private messageRepository: MessageRepository;
 
     constructor(app: Application, userRepository: UserRepository, chatRepository: ChatRepository, messageRepository : MessageRepository) {
-        this.app = app;
+        super(app);
         this.chatRepository = chatRepository;
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
         this.setupRoutes();
     }
 
-    private setupRoutes(): void {
+    protected setupRoutes(): void {
         // get messages from a chat
         this.app.get('/chat/:id/messages', async (req: Request, res: Response) => {
             // check parameters are present

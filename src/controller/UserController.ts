@@ -1,22 +1,21 @@
 import express, { Request, Response, Application } from 'express';
-import { IController } from '../interface/IController';
+import { AController } from '../interface/AController';
 import { UserRepository } from '../repository/UserRepository';
 import { User } from '../entity/User';
 import { ChatRepository } from '../repository/ChatRepository';
 
-export class UserController implements IController {
-    private app: Application;
+export class UserController extends AController {
     private userRepository: UserRepository;
     private chatRepository: ChatRepository;
 
     constructor(app: Application, userRepository: UserRepository, chatRepository: ChatRepository) {
-        this.app = app;
+        super(app);
         this.userRepository = userRepository;
         this.chatRepository = chatRepository;
         this.setupRoutes();
     }
 
-    private setupRoutes(): void {
+    protected setupRoutes(): void {
         // get all users, optional filter: id or name
         this.app.get('/users', async (req: Request, res: Response) => {
             const id = req.query.id;

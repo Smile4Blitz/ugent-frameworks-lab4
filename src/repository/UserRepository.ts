@@ -1,14 +1,13 @@
 import { DataSource, In, Repository } from "typeorm";
 import { User } from "../entity/User";
 import { AppDataSource } from "../data/DataSource";
-import { IRepository } from "../interface/IRepository";
+import { ARepository } from "../interface/ARepository";
 
-export class UserRepository implements IRepository {
-    private dataSource: DataSource;
+export class UserRepository extends ARepository {
     private repository: Repository<User>;
 
     constructor() {
-        this.dataSource = AppDataSource.getInstance();
+        super();
         this.repository = this.dataSource.getRepository(User);
     }
 

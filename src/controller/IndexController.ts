@@ -1,16 +1,14 @@
 import { Request, Response, Application } from 'express';
-import { IController } from '../interface/IController';
+import { AController } from '../interface/AController';
 import path from 'path';
 
-export class IndexController implements IController {
-    private app: Application;
-
+export class IndexController extends AController {
     constructor(app: Application) {
-        this.app = app;
+        super(app);
         this.setupRoutes();
     }
 
-    private setupRoutes(): void {
+    protected setupRoutes(): void {
         this.app.get('/', (req: Request, res: Response) => {
             res.sendFile(path.join(__dirname, '../www/pages', 'index.html'));
         });

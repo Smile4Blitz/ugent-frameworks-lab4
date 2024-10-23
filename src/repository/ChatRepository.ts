@@ -1,16 +1,16 @@
 import { DataSource, Repository } from "typeorm";
 import { Chat } from "../entity/Chat";
 import { AppDataSource } from "../data/DataSource";
-import { IRepository } from "../interface/IRepository";
+import { ARepository } from "../interface/ARepository";
 import { User } from "../entity/User";
 import { Message } from "../entity/Message";
 
-export class ChatRepository implements IRepository {
-    private dataSource: DataSource;
+export class ChatRepository extends ARepository {
+
     private repository: Repository<Chat>;
 
     constructor() {
-        this.dataSource = AppDataSource.getInstance();
+        super();
         this.repository = this.dataSource.getRepository(Chat);
     }
 
