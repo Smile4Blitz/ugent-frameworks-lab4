@@ -109,5 +109,27 @@ export class ChatController extends AController {
                 res.status(400).send({ message: "No valid participants found." });
             }
         });
+
+        this.app.post('/chat/:id/join', async (req: Request, res: Response) => {
+            const chatId = Number(req.params.id).valueOf();
+            const { userId } = req.body.id;
+
+            if (chatId == undefined || userId == undefined)
+                return res.status(400).send({ message: "/chat/:id/join: Missing chatId or userId parameter." });
+
+            const chat = await this.chatRepository.findById(chatId);
+            const user = await this.userRepository.findById(userId);
+
+            if (chat == undefined || user == undefined)
+                return res.status(404).send({ message: "/chat/:id/join: Couldn't find chat or user with id." });
+
+            try {
+                await this.chatRepository.joinChat(chat, user);
+                res.status(200).send();
+            } catch (error) {
+                console.error('Error joining chat:', error);
+                res.status(500).json({ message: 'Error joining chat' });
+            }
+        });
     }
 }

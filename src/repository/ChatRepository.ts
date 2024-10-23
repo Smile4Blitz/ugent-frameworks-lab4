@@ -50,4 +50,12 @@ export class ChatRepository extends ARepository {
     public async deleteChat(id: number): Promise<void> {
         await this.repository.delete(id);
     }
+
+    public async joinChat(chat: Chat, user: User) {
+        chat.participants.forEach(participant => {
+            if (participant.userId == user.userId)
+                return;
+        });
+        chat.participants.push(user);
+    }
 }
